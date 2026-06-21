@@ -124,13 +124,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route 
-        path="/admin/result-reports" 
-        element={
-        <ProtectedRoute allowedRole="ROLE_ADMIN">
-          <AdminResultReport />
-        </ProtectedRoute>
-        } />
+        <Route
+          path="/admin/results"
+          element={
+            <ProtectedRoute allowedRole="ROLE_ADMIN">
+              <AdminResultReport />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

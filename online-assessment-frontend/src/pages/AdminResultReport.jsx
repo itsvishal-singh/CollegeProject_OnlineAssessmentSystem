@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import api from "../api/axios";
 // import api from "../axios";
 
 export default function AdminResultReport() {
@@ -16,7 +17,7 @@ export default function AdminResultReport() {
 
   const loadExams = async () => {
     try {
-      const response = await api.get("/exams");
+      const response = await api.get("/admin/exams");
 
       setExams(response.data);
     } catch (error) {
@@ -50,9 +51,13 @@ export default function AdminResultReport() {
         <select
           value={selectedExam}
           onChange={(e) => {
-            setSelectedExam(e.target.value);
+            const examId = e.target.value;
 
-            loadReport(e.target.value);
+            setSelectedExam(examId);
+
+            if (examId) {
+              loadReport(examId);
+            }
           }}
           className="border rounded-lg p-3 w-80"
         >

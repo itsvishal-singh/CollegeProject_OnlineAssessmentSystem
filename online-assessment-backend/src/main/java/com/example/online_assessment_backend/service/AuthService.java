@@ -9,6 +9,7 @@ import com.example.online_assessment_backend.entity.UserEntity;
 import com.example.online_assessment_backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -16,15 +17,34 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private boolean isValidName(
+            String fullName) {
+        if (fullName == null) {
+            return false;
+        }
+        fullName = fullName.trim();
+        if (fullName.equalsIgnoreCase(
+                "null")) {
+            return false;
+        }
+        return fullName.matches(
+                "^(?=.{3,50}$)[A-Za-z]+(?: [A-Za-z]+)*$");
+    }
+
     // REGISTER
     public String register(RegisterRequest request) {
 
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             return "Username already exists";
         }
+        
+        if (!isValidName(
+                request.getFullName())) {
+            return "Please enter a valid full name";
+        }
 
         UserEntity user = UserEntity.builder()
-        .fullName(request.getFullName())
+                .fullName(request.getFullName())
 
                 .username(request.getUsername())
                 .mobile(request.getMobile())
@@ -54,4 +74,3 @@ public class AuthService {
         return "Login Successful";
     }
 }
-

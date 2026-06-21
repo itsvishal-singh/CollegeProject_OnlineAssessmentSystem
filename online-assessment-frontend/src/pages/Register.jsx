@@ -8,6 +8,7 @@ export default function Register() {
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [nameError, setNameError] = useState("");
 
   const navigate = useNavigate();
 
@@ -18,18 +19,28 @@ export default function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
     if (!passwordsMatch) return;
-
+    // Full name validation
+    const cleanedName = fullName.trim();
+    const invalidNames = ["null","nul", "test", "admin", "student"]
+    if (invalidNames.includes(cleanedName.toLowerCase())) {
+      setNameError("Please enter your real name");
+      return;
+    }
+    const fullNameRegex = /^(?=.{3,50}$)[A-Za-z]+(?: [A-Za-z]+)*$/;
+    if (!fullNameRegex.test(cleanedName)) {
+      setNameError("Enter a valid full name");
+      return;
+    }
+    setNameError("");
     try {
       await axios.post("http://localhost:8085/api/auth/register", {
         username,
         password,
-        role: "STUDENT", // Fixed role
+        role: "STUDENT",
         fullName,
         mobile,
       });
-
       alert("Registration Successful ✅");
       navigate("/login");
     } catch (err) {
@@ -57,6 +68,7 @@ export default function Register() {
             onChange={(e) => setFullName(e.target.value)}
             required
           />
+          {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
 
           <input
             type="email"
@@ -74,7 +86,9 @@ export default function Register() {
             minLength={10}
             maxLength={10}
             className={`w-full border p-3 rounded-xl text-indigo-600 focus:outline-none focus:ring-2 ${
-              isMobileValid ? "focus:ring-indigo-400" : "focus:ring-red-400 text-red-600"
+              isMobileValid
+                ? "focus:ring-indigo-400"
+                : "focus:ring-red-400 text-red-600"
             }`}
             value={mobile}
             onChange={(e) => {

@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
 @Table(name = "users")
 @Getter
@@ -28,8 +27,8 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
-    @Column(name  = "full_name")
+    @NotBlank(message = "Full name is required")
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @NotBlank(message = "Username is required")
@@ -44,7 +43,7 @@ public class UserEntity {
     private String password;
 
     @Column(nullable = false)
-    private String role; // ADMIN or STUDENT
+    private String role;
 
     @Column(nullable = false)
     @Builder.Default
